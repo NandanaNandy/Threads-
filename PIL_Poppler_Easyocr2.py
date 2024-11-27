@@ -50,3 +50,9 @@ for page_num, image in enumerate(images, start=first_page):
 end_time = time.time()
 total_duration = end_time - start_time
 print(f"\nTotal Time for Processing: {total_duration:.4f} seconds")
+
+
+
+
+
+
