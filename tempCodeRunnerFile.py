@@ -1,55 +1,46 @@
-# import sys
-# import easyocr
+
+# import time
 # from pdf2image import convert_from_path
 
-# def ocr_image(image_path):
-#     reader = easyocr.Reader(['en'])
-#     result = reader.readtext(image_path)
-#     for detection in result:
-#         print(f"Detected Text: {detection[1]} - Bounding Box: {detection[0]}")
+# def convert_pdf_page_to_image(pdf_path, page_number, dpi=300, poppler_path=None):
+#     try:
+#         images = convert_from_path(
+#             pdf_path, dpi=dpi, first_page=page_number, last_page=page_number, poppler_path=poppler_path
+#         )
+#         if not images:
+#             raise ValueError(f"Page {page_number} could not be converted.")
+#         return images[0]  # Return the PIL Image object directly
+#     except Exception as e:
+#         print(f"Error converting page {page_number}: {e}")
+#         return None
 
-# def process_pdf(pdf_path, poppler_path):
-#     images = convert_from_path(pdf_path, poppler_path=poppler_path)
-#     for page_num, image in enumerate(images, start=1):
-#         image_path = f"page_{page_num}.png"
-#         image.save(image_path)
-#         print(f"Processing Page {page_num}...")
-#         ocr_image(image_path)
+# def save_image(img, output_file):
+#     try:
+#         img.save(output_file, format="PNG")  # Save the image directly to file
+#         return f"Saved {output_file}"
+#     except Exception as e:
+#         print(f"Error saving {output_file}: {e}")
+#         return None
 
-# if _name_ == "_main_":
-#     pdf_path = r"D:\KIT\sem 2\beee qp2.pdf"
+# def process_page(pdf_path, page_number, dpi=300, poppler_path="C:\\poppler\\bin"):
+#     img = convert_pdf_page_to_image(pdf_path, page_number, dpi, poppler_path)
+#     if img is not None:
+#         output_file = f"page_{page_number}_processed.png"
+#         result = save_image(img, output_file)
+#         return result if result is not None else f"Failed to save page {page_number}"
+#     return f"Failed to process page {page_number}"
+
+# if __name__ == "__main__":
+#     starttime = time.time()
+#     pdf_path = r"E:\sample docs\Iterations-codility.pdf"
+#     total_pages = 4
 #     poppler_path = r"E:\Release-24.08.0-0\poppler-24.08.0\Library\bin"
-#     process_pdf(pdf_path, poppler_path)
-
-import easyocr
-import multiprocessing
-import time
-def extract_text(image_path, lang):
-    try:
-        reader = easyocr.Reader([lang]) 
-        result = reader.readtext(image_path)
-        extracted_text = " ".join([text[1] for text in result])  
-        print(f"Extracted Text from {image_path} in {lang}:")
-        print(extracted_text)
-        return extracted_text
-    except Exception as e:
-        print(f"Error processing {image_path} in {lang}: {e}")
-        return None
-
-def process_image_parallel(image_path, languages):
-    with multiprocessing.Pool(processes=len(languages)) as pool:
-        results = pool.starmap(extract_text, [(image_path, lang) for lang in languages])
-        pool.close()
-        pool.join()
-    return results
-if __name__ == "_main_":
-
-    image_path = "F:\Softcopy _official\Screenshot_2024_0115_094707.jpg"
-    languages = ['en', 'ta'] 
-
-    start_time = time.time()
-    extracted_texts = process_image_parallel(image_path, languages)
-
-    print("\nTotal Execution Time:", time.time() - start_time)
+#     results = []
     
+#     for page_number in range(1, total_pages + 1):
+#         result = process_page(pdf_path, page_number, dpi=300, poppler_path=poppler_path)
+#         results.append(result)
     
+#     print("\n".join(results))
+#     endtime = time.time()
+#     print(f"\nTotal execution time (single processor): {endtime - starttime:.2f} seconds")
